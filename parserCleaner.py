@@ -1,3 +1,6 @@
+# This is an example application
+
+import libvoikko
 import numpy as np
 import pandas as pd
 import string
@@ -7,6 +10,7 @@ from collections import defaultdict
 
 STOP_WORDS = set([word.strip() for word in open("stop_words.txt")])
 SISALTO_FIELD_PREFIX = "sisalto_level_"
+voikko = libvoikko.Voikko("fi")
 
 
 def parse_text_from_xml(XML):
@@ -50,11 +54,28 @@ def clean_text(text):
         # Remove numbers
         words = filter(lambda x: not x.isnumeric(), words)
 
+        # Set to lower case
+        words = map(lambda x: x.lower(), words)
+
         # Remove stop words
         words = filter(lambda x: x not in STOP_WORDS, words)
 
-        # Set to lower case
-        words = map(lambda x: x.lower(), words)
+        # Combine and return the cleaned string
+        return " ".join(list(words))
+
+
+def lemmatize(text):
+    # If not text return nan
+    if not isinstance(text, str) or len(text) <= 0:
+        return np.nan
+    else:
+        # Get the baseform of each word using libvoikko
+        words = text.split()
+        words = map(lambda x: voikko.analyze(x), words)
+        words = map(lambda x: x[0]["BASEFORM"] if len(x) > 0 else "", words)
+
+        # Remove stop words
+        words = filter(lambda x: x not in STOP_WORDS, words)
 
         # Combine and return the cleaned string
         return " ".join(list(words))
@@ -78,7 +99,15 @@ for column in df.columns:
         df.drop(columns=[column], inplace=True)
 
 
-# Save the output
-timestr = time.strftime("%Y%m%d_%H%M%S")
-df.to_csv(f"{timestr}_cleaned_parsed.csv", sep=";")
+# Lemmatize each text column by calling lemmatize for every row on text columns
+for column in df.columns:
+    if f"clean_{SISALTO_FIELD_PREFIX}" in column:
+        df = df.merge(
+            df[column].apply(lambda s: pd.Series({f"lemmatized_clean_{column}": lemmatize(s)})),
+            left_index=True,
+            right_index=True,
+        )
+        df.drop(columns=[column], inplace=True)
 
+timestr = time.strftime("%Y%m%d_%H%M%S")
+df.to_csv(f"data/{timestr}_lemmatized_cleaned_parsed.csv", sep=";")
