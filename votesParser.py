@@ -29,8 +29,21 @@ filteredVotesDist = filteredVotesDist[filteredVotesDist.AanestysId >= 36087]
 # Join the two tables with merge, remove rows with NaNs.
 joined = filteredVotesDist.merge(filteredVoteInfos, how='left', on='AanestysId')
 joined = joined.dropna(axis=0)
-print(joined.head(40))
-print(joined.columns)
-print(joined.Ryhma.unique())
 
-#pivoted = joined.pivot() or joined.pivot_table() <-- more secure
+newArray = pd.DataFrame(columns=['Yhteensa', 'Tyyppi', 'IstuntoVPVuosi', 'IstuntoPvm', 'AanestysMitatoity', 'KohtaKasittelyVaihe'])
+newColumns = list()
+names = joined.Ryhma.unique()
+for i in range(0, len(names)):
+    name = names[i]
+    newColumns.extend([f'{name}_Jaa', f'{name}_Ei'])
+print(newColumns)
+
+def handleRows(inputTable):
+    for i in range(36087, 43836):
+        rowsToHandle = joined[joined.AanestysId == i]
+        if not rowsToHandle: 
+            continue
+        else:
+            print('')
+
+#handleRows(joined)
