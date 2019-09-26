@@ -1,8 +1,8 @@
 import pandas as pd
 import time
 
-PATH_DIST = '/Users/Pete/Projects/IDS/track-your-parliament-data/SaliDBAanestysJakauma_result.csv'
-PATH_VOTES = '/Users/Pete/Projects/IDS/track-your-parliament-data/SaliDBAanestys_result.csv'
+PATH_DIST = './data/SaliDBAanestysJakauma_result.csv'
+PATH_VOTES = './data/SaliDBAanestys_result.csv'
 
 dataVotesDist = pd.read_csv(
     PATH_DIST,
@@ -11,7 +11,7 @@ dataVotesDist = pd.read_csv(
 dataVoteInfos = pd.read_csv(
     PATH_VOTES, 
     delimiter=';', 
-    dtype={'AanestysId': int, 'IstuntoVPVuosi': int, 'IstuntoPvm': str, 'AanestysMitatoity': int, 'KohtaKasittelyVaihe': str})
+    dtype={'AanestysId': int, 'IstuntoVPVuosi': int, 'IstuntoPvm': str, 'AanestysMitatoity': int, 'KohtaKasittelyVaihe': str, 'AanestysValtiopaivaasia': str })
 
 # Filter rows
 filteredVoteInfos = dataVoteInfos[(
@@ -21,7 +21,7 @@ filteredVotesDist = dataVotesDist[(dataVotesDist.Tyyppi == 'eduskuntaryhma') | (
 
 # Drop useless columns
 filteredVoteInfos = filteredVoteInfos.drop(dataVoteInfos.columns.difference(
-    ['AanestysId', 'IstuntoVPVuosi', 'IstuntoPvm', 'AanestysMitatoity', 'KohtaKasittelyVaihe']), axis=1)
+    ['AanestysId', 'IstuntoVPVuosi', 'IstuntoPvm', 'AanestysMitatoity', 'KohtaKasittelyVaihe', 'AanestysValtiopaivaasia']), axis=1)
 filteredVotesDist = filteredVotesDist.drop(columns=['JakaumaId', 'Imported'])
 
 # Filter rows from the first voting of the year 2015
@@ -37,4 +37,4 @@ joined = joined[(joined.KohtaKasittelyVaihe == 'Ainoa käsittely') | (joined.Koh
 
 # Save file with timestamp
 timestr = time.strftime("%Y%m%d_%H%M%S")
-joined.to_csv(f"{timestr}_voting_info.csv", sep=";")
+joined.to_csv(f"./data/{timestr}_voting_info.csv", sep=";")

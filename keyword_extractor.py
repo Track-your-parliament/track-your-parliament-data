@@ -5,16 +5,16 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from wordcloud import WordCloud
 import json
 
-FILE = "./data/20190924_141345_lemmatized_cleaned_parsed.csv"
+GOV_PROPOSALS = './data/20190926_194857_lemmatized_cleaned_parsed.csv'
 documents = []
 
-df = pd.read_csv(FILE, ";")
+proposals_df = pd.read_csv(GOV_PROPOSALS, ";")
 
 # Drop junk columns
-df = df.drop(df.columns[0:2], axis=1)
+proposals_df = proposals_df.drop(proposals_df.columns[0:2], axis=1)
 
 # Drop rows which have no "sisalto" for any level
-df.dropna(how="all", axis=0, subset=df.columns[-8:], inplace=True)
+proposals_df.dropna(how="all", axis=0, subset=proposals_df.columns[-8:], inplace=True)
 
 
 def combine(row, columns):
@@ -24,12 +24,12 @@ def combine(row, columns):
 
 
 # Combine sisalto from all levels to one column
-df["sisalto"] = df.apply(lambda x: combine(x, df.columns[-8:]), axis=1)
+proposals_df["sisalto"] = proposals_df.apply(lambda x: combine(x, proposals_df.columns[-8:]), axis=1)
 
-df = df.drop(df.columns[-9:-1], axis=1)
+proposals_df = proposals_df.drop(proposals_df.columns[-9:-1], axis=1)
 
 # Create an entry for each document in the object array documents
-df.apply(lambda x: documents.append({
+proposals_df.apply(lambda x: documents.append({
     'id': x['Eduskuntatunnus'],
     'title': x['nimike'],
     'created': x['Created'],
@@ -38,7 +38,7 @@ df.apply(lambda x: documents.append({
 
 # TFIDF
 vectorizer = TfidfVectorizer(use_idf=True)
-tfidf = vectorizer.fit_transform(df["sisalto"])
+tfidf = vectorizer.fit_transform(proposals_df["sisalto"])
 
 # Extract keywords from tfidf matrix and attach top 20 to the correct document object,
 # then write that object into a json file.
@@ -50,7 +50,7 @@ def extract_keywords(idx, out):
   if idx != len(documents) - 1:
     out.write(',\n')
 
-with open('documents_with_keywords.json', 'w') as out:
+with open('./data/proposals_with_keywords.json', 'w') as out:
   out.write('[')
   pd.Series(np.arange(0, len(documents))).apply(lambda x: extract_keywords(x, out))
   out.write(']')
