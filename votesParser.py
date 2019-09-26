@@ -1,11 +1,15 @@
 import pandas as pd
+import time
+
+PATH_DIST = '/Users/Pete/Projects/IDS/track-your-parliament-data/SaliDBAanestysJakauma_result.csv'
+PATH_VOTES = '/Users/Pete/Projects/IDS/track-your-parliament-data/SaliDBAanestys_result.csv'
 
 dataVotesDist = pd.read_csv(
-    '/Users/Pete/Projects/IDS/track-your-parliament-data/SaliDBAanestysJakauma_result.csv', 
+    PATH_DIST,
     delimiter=';', 
     dtype={'AanestysId': int, 'Ryhma': str, 'Jaa': int, 'Ei': int, 'Tyhjia': int, 'Poissa': int, 'Yhteensa': int, 'Tyyppi': str})
 dataVoteInfos = pd.read_csv(
-    '/Users/Pete/Projects/IDS/track-your-parliament-data/SaliDBAanestys_result.csv', 
+    PATH_VOTES, 
     delimiter=';', 
     dtype={'AanestysId': int, 'IstuntoVPVuosi': int, 'IstuntoPvm': str, 'AanestysMitatoity': int, 'KohtaKasittelyVaihe': str})
 
@@ -29,21 +33,8 @@ filteredVotesDist = filteredVotesDist[filteredVotesDist.AanestysId >= 36087]
 # Join the two tables with merge, remove rows with NaNs.
 joined = filteredVotesDist.merge(filteredVoteInfos, how='left', on='AanestysId')
 joined = joined.dropna(axis=0)
+joined = joined[(joined.KohtaKasittelyVaihe == 'Ainoa käsittely') | (joined.KohtaKasittelyVaihe == 'Toinen käsittely')]
 
-newArray = pd.DataFrame(columns=['Yhteensa', 'Tyyppi', 'IstuntoVPVuosi', 'IstuntoPvm', 'AanestysMitatoity', 'KohtaKasittelyVaihe'])
-newColumns = list()
-names = joined.Ryhma.unique()
-for i in range(0, len(names)):
-    name = names[i]
-    newColumns.extend([f'{name}_Jaa', f'{name}_Ei'])
-print(newColumns)
-
-def handleRows(inputTable):
-    for i in range(36087, 43836):
-        rowsToHandle = joined[joined.AanestysId == i]
-        if not rowsToHandle: 
-            continue
-        else:
-            print('')
-
-#handleRows(joined)
+# Save file with timestamp
+timestr = time.strftime("%Y%m%d_%H%M%S")
+joined.to_csv(f"{timestr}_voting_info.csv", sep=";")
