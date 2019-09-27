@@ -5,11 +5,17 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from wordcloud import WordCloud
 import json
 
-GOV_PROPOSALS = './data/20190926_194857_lemmatized_cleaned_parsed.csv'
+GOV_PROPOSALS = './data/government_proposals_clean.csv'
+PARL_PROPOSALS = './data/parliament_proposals_clean.csv'
 documents = []
 
-proposals_df = pd.read_csv(GOV_PROPOSALS, ";")
+gov_proposals_df = pd.read_csv(GOV_PROPOSALS, ';')
+parl_proposals_df = pd.read_csv(PARL_PROPOSALS, ';')
 
+print(gov_proposals_df.shape)
+print(parl_proposals_df.shape)
+proposals_df = gov_proposals_df.append(parl_proposals_df, ignore_index=True, sort=False)
+print(proposals_df.shape)
 # Drop junk columns
 proposals_df = proposals_df.drop(proposals_df.columns[0:2], axis=1)
 

@@ -82,7 +82,7 @@ def lemmatize(text):
 
 
 # Read the input file
-df = pd.read_csv("VaskiData_result.csv", ";")
+df = pd.read_csv("./data/parliament_proposals_raw.csv", ";")
 
 # Parse the XML column and by calling parse_text_from_xml for each row
 df = df.merge(df.XmlData.apply(lambda s: parse_text_from_xml(s)), left_index=True, right_index=True)
@@ -109,5 +109,4 @@ for column in df.columns:
         )
         df.drop(columns=[column], inplace=True)
 
-timestr = time.strftime("%Y%m%d_%H%M%S")
-df.to_csv(f"data/{timestr}_lemmatized_cleaned_parsed.csv", sep=";")
+df.to_csv(f"data/parliament_proposals_clean.csv", sep=";")
