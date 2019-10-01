@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import json
 
-GOVERNMENT_PROPOSALS = './data/proposals_with_keywords.json'
+PROPOSALS = './data/proposals_with_keywords.json'
 VOTE_DISTRIBUTIONS = './data/voting_info.csv'
 HEARINGS = {
   'Ainoa käsittely': 'Only hearing',
@@ -14,7 +14,7 @@ HEARINGS = {
 votes_df = pd.read_csv(VOTE_DISTRIBUTIONS, ';')
 grouped_votes_by_proposal = votes_df.groupby(by=['AanestysValtiopaivaasia'])
 
-proposals_df = pd.read_json(GOVERNMENT_PROPOSALS)
+proposals_df = pd.read_json(PROPOSALS)
 proposals_df = proposals_df[proposals_df.id.isin(votes_df.AanestysValtiopaivaasia.unique())]
 
 def vote_from_vote_group(vote_group):
