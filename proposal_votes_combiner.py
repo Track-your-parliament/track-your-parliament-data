@@ -4,7 +4,12 @@ import json
 
 GOVERNMENT_PROPOSALS = './data/proposals_with_keywords.json'
 VOTE_DISTRIBUTIONS = './data/voting_info.csv'
-HEARINGS = { 'Ainoa käsittely': 'Only hearing', 'Toinen käsittely': 'Second hearing' }
+HEARINGS = {
+  'Ainoa käsittely': 'Only hearing',
+  'Toinen käsittely': 'Second hearing',
+  'Toinen käsittely, ainoa käsittely': 'Second hearing, only hearing',
+  'Osittain ainoa, osittain toinen käsittely': 'Partly only hearing, partly second hearing'
+}
 
 votes_df = pd.read_csv(VOTE_DISTRIBUTIONS, ';')
 grouped_votes_by_proposal = votes_df.groupby(by=['AanestysValtiopaivaasia'])

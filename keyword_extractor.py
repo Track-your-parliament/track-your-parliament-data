@@ -12,10 +12,8 @@ documents = []
 gov_proposals_df = pd.read_csv(GOV_PROPOSALS, ';')
 parl_proposals_df = pd.read_csv(PARL_PROPOSALS, ';')
 
-print(gov_proposals_df.shape)
-print(parl_proposals_df.shape)
 proposals_df = gov_proposals_df.append(parl_proposals_df, ignore_index=True, sort=False)
-print(proposals_df.shape)
+
 # Drop junk columns
 proposals_df = proposals_df.drop(proposals_df.columns[0:2], axis=1)
 
@@ -32,15 +30,26 @@ def combine(row, columns):
 # Combine sisalto from all levels to one column
 proposals_df["sisalto"] = proposals_df.apply(lambda x: combine(x, proposals_df.columns[-8:]), axis=1)
 
-proposals_df = proposals_df.drop(proposals_df.columns[-9:-1], axis=1)
+# Return the content of te first level containing any text for a row
+def get_first_level_text(row):
+
+  for i in range(4,12):
+    text = row[f'lemmatized_clean_clean_sisalto_level_{str(i)}']
+    if type(text) == str and len(text) > 0:
+      return text
+
+  return ''
 
 # Create an entry for each document in the object array documents
 proposals_df.apply(lambda x: documents.append({
     'id': x['Eduskuntatunnus'],
     'title': x['nimike'],
     'created': x['Created'],
+    'summary': get_first_level_text(x),
     'keywords': []
   }), axis=1)
+
+proposals_df = proposals_df.drop(proposals_df.columns[-9:-1], axis=1)
 
 # TFIDF
 vectorizer = TfidfVectorizer(use_idf=True)

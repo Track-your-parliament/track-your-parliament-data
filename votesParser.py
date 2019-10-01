@@ -33,8 +33,10 @@ filteredVotesDist = filteredVotesDist[filteredVotesDist.AanestysId >= 36087]
 # Join the two tables with merge, remove rows with NaNs.
 joined = filteredVotesDist.merge(filteredVoteInfos, how='left', on='AanestysId')
 joined = joined.dropna(axis=0)
-joined = joined[(joined.KohtaKasittelyVaihe == 'Ainoa käsittely') | (joined.KohtaKasittelyVaihe == 'Toinen käsittely')]
+joined = joined[(joined.KohtaKasittelyVaihe == 'Ainoa käsittely')
+    | (joined.KohtaKasittelyVaihe == 'Toinen käsittely')
+    | (joined.KohtaKasittelyVaihe == 'Toinen käsittely, ainoa käsittely')
+    | (joined.KohtaKasittelyVaihe == 'Osittain ainoa, osittain toinen käsittely')]
 
-# Save file with timestamp
-timestr = time.strftime("%Y%m%d_%H%M%S")
-joined.to_csv(f"./data/{timestr}_voting_info.csv", sep=";")
+# Save file
+joined.to_csv('./data/voting_info.csv', sep=';')
