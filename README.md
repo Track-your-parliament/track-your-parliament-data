@@ -10,10 +10,6 @@ Data has been fetched and parsed from https://avoindata.eduskunta.fi and it's us
 
 ### Data models
 
-#### `voting_info.json`
-
-#### `proposals_with_keywords`
-
 #### `proposals_keywords_distributions.json`
 
 ```
@@ -119,4 +115,44 @@ Data has been fetched and parsed from https://avoindata.eduskunta.fi and it's us
     ...
   ]
 }
+```
+
+#### `proposals_with_keywords.json`
+```
+{
+  id: {|Id of the proposal|},
+  title: {|Title of the proposal|},
+  created: {|Creation date of the proposal|},
+  summary: {|Summary of the proposal|},
+  keywords: [
+    {
+      word: {|Word in the proposal|},
+      tfidf: {|TF-IDF score of the word|}
+    },
+    ...
+  ],
+  keywords_list: [
+    {|Word in the proposal|},
+    ...
+  ]
+}
+```
+
+#### `voting_info.csv`
+Separator: `;`
+Columns:
+```
+AanestysId: {|Vote ID|}
+Ryhma: {|Name of the group|}
+Jaa: {|Number of people in the group who voted for|}
+Ei: {|Number of people in the group who voted against|}
+Tyhjia: {|Number of people in the group who voted empty|}
+Poissa: {|Number of people in the group who were absent|}
+Yhteensa: {|Number of people in the group|}
+Tyyppi: {|Type of the group (parliamentary group or opposition/government parties|}
+IstuntoVPVuosi: {|Year of the vote|}
+IstuntoPvm: {|Date when vote took place|}
+AanestysMitatoity: {|1 if the vote has been annulled, 0 otherwise|}
+KohtaKasittelyVaihe: {|Which stage the vote took place in (first/second hearing etc)|}
+AanestysValtiopaivaasia: {|Id of the proposal that was voted on|}
 ```
