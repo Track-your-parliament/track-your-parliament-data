@@ -117,6 +117,17 @@ Data has been fetched and parsed from https://avoindata.eduskunta.fi and it's us
 }
 ```
 
+#### `top_keywords_by_day.json`
+```
+{
+  date: {|Date|},
+  keywords_list: [
+    {|word|},
+    ...
+  ]
+}
+```
+
 #### `proposals_with_keywords.json`
 ```
 {
