@@ -46,7 +46,8 @@ proposals_df.apply(lambda x: documents.append({
     'title': x['nimike'],
     'created': x['Created'],
     'summary': get_first_level_text(x),
-    'keywords': []
+    'keywords': [],
+    'keywords_list': []
   }), axis=1)
 
 proposals_df = proposals_df.drop(proposals_df.columns[-9:-1], axis=1)
@@ -61,6 +62,7 @@ def extract_keywords(idx, out):
   df_tfidf = pd.DataFrame(tfidf[idx].T.todense(), index=vectorizer.get_feature_names(), columns=["tfidf"])
   main_keywords = df_tfidf.sort_values(by=["tfidf"], ascending=False).head(20).reset_index().rename(columns={'index': 'word'})
   main_keywords.apply(lambda x: documents[idx]['keywords'].append({ 'word': x[0], 'tfidf': x[1] }), axis=1)
+  main_keywords.apply(lambda x: documents[idx]['keywords_list'].append(x[0]), axis=1)
   json.dump(documents[idx], out)
   if idx != len(documents) - 1:
     out.write(',\n')
