@@ -5,18 +5,18 @@ import datetime
 PROPOSALS = './data/votes_keywords_distributions.json'
 
 df = pd.read_json(PROPOSALS)
-df = df.assign(Year=lambda x: x.date.dt.year)
-df = df.assign(Month=lambda x: x.date.dt.month)
-group_by_month = df.groupby(by=['Year', 'Month'])
+df = df.assign(year=lambda x: x.date.dt.year)
+df = df.assign(month=lambda x: x.date.dt.month)
+group_by_month = df.groupby(by=['year', 'month'])
 
-monthly_tags = df.filter(items=['Year', 'Month']).drop_duplicates().reset_index().drop(columns=['index'])
-monthly_tags = monthly_tags.reset_index().rename(columns={'index': 'Tags'})
+monthly_keywords = df.filter(items=['year', 'month']).drop_duplicates().reset_index().drop(columns=['index'])
+monthly_keywords = monthly_keywords.reset_index().rename(columns={'index': 'keywords_list'})
 
-def get_top_tags_for_month(month):
-  month_tags = []
-  df[(df.Year == monthly_tags.Year[month]) & (df.Month == monthly_tags.Month[month])].keywords.apply(lambda x: month_tags.extend(x))
-  return pd.DataFrame(month_tags).drop_duplicates().sort_values(by=['tfidf'], ascending=False).head(20).word.to_numpy()
+def get_top_keywords_for_month(month):
+  month_keywords = []
+  df[(df.year == monthly_keywords.year[month]) & (df.month == monthly_keywords.month[month])].keywords.apply(lambda x: month_keywords.extend(x))
+  return pd.DataFrame(month_keywords).drop_duplicates().sort_values(by=['tfidf'], ascending=False).head(20).word.to_numpy()
 
-monthly_tags.Tags = monthly_tags.Tags.apply(lambda x: get_top_tags_for_month(x))
+monthly_keywords.keywords_list = monthly_keywords.keywords_list.apply(lambda x: get_top_keywords_for_month(x))
 
-monthly_tags.to_json('./data/top_keywords_by_month.json', orient='records')
+monthly_keywords.to_json('./data/top_keywords_by_month.json', orient='records')

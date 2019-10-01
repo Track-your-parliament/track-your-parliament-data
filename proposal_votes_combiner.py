@@ -53,7 +53,7 @@ def combine_votes_to_proposal(proposal):
 
   return(votes)
 
-proposals_df = proposals_df.assign(Votes=lambda x: x.id)
-proposals_df.Votes = proposals_df.Votes.apply(lambda x: combine_votes_to_proposal(x))
+proposals_df = proposals_df.assign(votes=lambda x: x.id)
+proposals_df.votes = proposals_df.votes.apply(lambda x: combine_votes_to_proposal(x))
 
 proposals_df.to_json('./data/proposals_keywords_distributions.json', orient='records')

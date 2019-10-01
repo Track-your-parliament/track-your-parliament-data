@@ -5,17 +5,17 @@ import datetime
 PROPOSALS = './data/votes_keywords_distributions.json'
 
 df = pd.read_json(PROPOSALS)
-df = df.assign(Year=lambda x: x.date.dt.year)
-group_by_years = df.groupby(by=['Year'])
+df = df.assign(year=lambda x: x.date.dt.year)
+group_by_years = df.groupby(by=['year'])
 
-yearly_tags = pd.DataFrame(df.Year.unique(), columns=['Year'])
-yearly_tags = yearly_tags.assign(Tags=lambda x: x.Year)
+yearly_keywords = pd.DataFrame(df.year.unique(), columns=['year'])
+yearly_keywords = yearly_keywords.assign(keywords_list=lambda x: x.year)
 
-def get_top_tags_for_year(year):
-  year_tags = []
-  group_by_years.get_group(year).keywords.apply(lambda x: year_tags.extend(x))
-  return pd.DataFrame(year_tags).drop_duplicates().sort_values(by=['tfidf'], ascending=False).head(20).word.to_numpy()
+def get_top_keywords_for_year(year):
+  year_keywords = []
+  group_by_years.get_group(year).keywords.apply(lambda x: year_keywords.extend(x))
+  return pd.DataFrame(year_keywords).drop_duplicates().sort_values(by=['tfidf'], ascending=False).head(20).word.to_numpy()
 
-yearly_tags.Tags = yearly_tags.Tags.apply(lambda x: get_top_tags_for_year(x))
+yearly_keywords.keywords_list = yearly_keywords.keywords_list.apply(lambda x: get_top_keywords_for_year(x))
 
-yearly_tags.to_json('./data/top_keywords_by_year.json', orient='records')
+yearly_keywords.to_json('./data/top_keywords_by_year.json', orient='records')

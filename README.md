@@ -29,7 +29,7 @@ Data has been fetched and parsed from https://avoindata.eduskunta.fi and it's us
     {|Word in the proposal|},
     ...
   ],
-  Votes: [
+  votes: [
     {
       vote_id: {|Id of the vote|},
       date: {|Date when vote took place|},
@@ -97,8 +97,8 @@ Data has been fetched and parsed from https://avoindata.eduskunta.fi and it's us
 #### `top_keywords_by_year.json`
 ```
 {
-  Year: {|Year|},
-  Tags: [
+  year: {|Year|},
+  keywords_list: [
     {|word|},
     ...
   ]
@@ -108,9 +108,9 @@ Data has been fetched and parsed from https://avoindata.eduskunta.fi and it's us
 #### `top_keywords_by_month.json`
 ```
 {
-  Year: {|Year|},
-  Month: {|Month|}
-  Tags: [
+  year: {|Year|},
+  month: {|Month|}
+  keywords_list: [
     {|word|},
     ...
   ]
