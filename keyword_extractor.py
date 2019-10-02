@@ -30,22 +30,12 @@ def combine(row, columns):
 # Combine sisalto from all levels to one column
 proposals_df["sisalto"] = proposals_df.apply(lambda x: combine(x, proposals_df.columns[-8:]), axis=1)
 
-# Return the content of te first level containing any text for a row
-def get_first_level_text(row):
-
-  for i in range(4,12):
-    text = row[f'lemmatized_clean_clean_sisalto_level_{str(i)}']
-    if type(text) == str and len(text) > 0:
-      return text
-
-  return ''
-
 # Create an entry for each document in the object array documents
 proposals_df.apply(lambda x: documents.append({
     'id': x['Eduskuntatunnus'],
     'title': x['nimike'],
     'created': x['Created'],
-    'summary': get_first_level_text(x),
+    'summary': x['summary'],
     'keywords': [],
     'keywords_list': []
   }), axis=1)

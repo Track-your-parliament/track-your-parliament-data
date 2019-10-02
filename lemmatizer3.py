@@ -30,12 +30,16 @@ def parse_text_from_xml(XML):
         if field is not None and isinstance(field.text, str) and len(field.text) > 0:
             sisalto_dict[item] = field.text
 
+    summary_found = False
     # For each level get the text values and combine them together
     for levelNumber in np.arange(1, 12):
         level = LEVEL * levelNumber
         for item in root.findall(level + "{http://www.vn.fi/skeemat/sisaltokooste/2010/04/27}KappaleKooste"):
             if isinstance(item.text, str) and len(item.text) > 0:
                 sisalto_dict[f"{SISALTO_FIELD_PREFIX}{levelNumber}"] += item.text + " "
+                if not summary_found:
+                    sisalto_dict['summary'] = item.text
+                    summary_found = True
 
     # Return a series which has the values for absolutely defined fields and then a text value for each level that text was found
     return pd.Series(sisalto_dict)
@@ -82,7 +86,7 @@ def lemmatize(text):
 
 
 # Read the input file
-df = pd.read_csv("./data/parliament_proposals_raw.csv", ";")
+df = pd.read_csv("./data/government_proposals_raw.csv", ";")
 
 # Parse the XML column and by calling parse_text_from_xml for each row
 df = df.merge(df.XmlData.apply(lambda s: parse_text_from_xml(s)), left_index=True, right_index=True)
@@ -109,4 +113,4 @@ for column in df.columns:
         )
         df.drop(columns=[column], inplace=True)
 
-df.to_csv(f"data/parliament_proposals_clean.csv", sep=";")
+df.to_csv(f"data/government_proposals_clean.csv", sep=";")
