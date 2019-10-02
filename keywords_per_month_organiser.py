@@ -19,4 +19,6 @@ def get_top_keywords_for_month(month):
 
 monthly_keywords.keywords_list = monthly_keywords.keywords_list.apply(lambda x: get_top_keywords_for_month(x))
 
+monthly_keywords = monthly_keywords.sort_values(by=['year', 'month'], ascending=False)
+
 monthly_keywords.to_json('./data/top_keywords_by_month.json', orient='records')

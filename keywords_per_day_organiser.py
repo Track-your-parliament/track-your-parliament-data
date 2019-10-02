@@ -16,4 +16,6 @@ def get_top_keywords_for_day(day):
 daily_keywords.keywords_list = daily_keywords.keywords_list.apply(lambda x: get_top_keywords_for_day(x))
 daily_keywords.date = daily_keywords.date.astype(str)
 
+daily_keywords = daily_keywords.sort_values(by=['date'], ascending=False)
+
 daily_keywords.to_json('./data/top_keywords_by_day.json', orient='records')

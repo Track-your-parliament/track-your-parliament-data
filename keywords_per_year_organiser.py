@@ -18,4 +18,6 @@ def get_top_keywords_for_year(year):
 
 yearly_keywords.keywords_list = yearly_keywords.keywords_list.apply(lambda x: get_top_keywords_for_year(x))
 
+yearly_keywords = yearly_keywords.sort_values(by=['year'], ascending=False)
+
 yearly_keywords.to_json('./data/top_keywords_by_year.json', orient='records')

@@ -51,4 +51,6 @@ def combine_distribution_to_vote(vote):
 unique_votes_df = unique_votes_df.merge(proposals_df, left_on='AanestysValtiopaivaasia', right_on='id', how='left').assign(distribution=lambda x: x.vote_id)
 unique_votes_df.distribution = unique_votes_df.distribution.apply(lambda x: combine_distribution_to_vote(x))
 
+unique_votes_df = unique_votes_df.sort_values(by=['date'], ascending=False)
+
 unique_votes_df.to_json('./data/votes_keywords_distributions.json', orient='records')
