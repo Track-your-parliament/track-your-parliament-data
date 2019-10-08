@@ -17,13 +17,15 @@ votes_df = pd.read_csv(VOTE_DISTRIBUTIONS, ';').drop(columns=['Unnamed: 0', 'Unn
 votes_df = votes_df[votes_df.AanestysValtiopaivaasia.isin(proposals_df.id.unique())]
 
 unique_votes_df = votes_df.filter(
-  items=['AanestysId', 'IstuntoPvm', 'IstuntoVPVuosi', 'AanestysMitatoity', 'KohtaKasittelyVaihe', 'AanestysValtiopaivaasia'],
+  items=['AanestysId', 'IstuntoPvm', 'IstuntoNumero', 'IstuntoVPVuosi', 'AanestysMitatoity', 'KohtaKasittelyVaihe', 'AanestysValtiopaivaasia', 'AanestysAlkuaika'],
 ).rename(columns={
   'AanestysId': 'vote_id',
   'IstuntoPvm': 'date',
+  'IstuntoNumero': 'gathering_number',
   'IstuntoVPVuosi': 'year',
   'AanestysMitatoity': 'annulled',
-  'KohtaKasittelyVaihe': 'hearing_stage'
+  'KohtaKasittelyVaihe': 'hearing_stage',
+  'AanestysAlkuaika': 'time'
 }).drop_duplicates()
 
 def distribution_from_row(vote):

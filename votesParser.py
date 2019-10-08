@@ -11,7 +11,7 @@ dataVotesDist = pd.read_csv(
 dataVoteInfos = pd.read_csv(
     PATH_VOTES, 
     delimiter=';', 
-    dtype={'AanestysId': int, 'IstuntoVPVuosi': int, 'IstuntoPvm': str, 'AanestysMitatoity': int, 'KohtaKasittelyVaihe': str, 'AanestysValtiopaivaasia': str })
+    dtype={'AanestysId': int, 'IstuntoVPVuosi': int, 'IstuntoNumero': int, 'IstuntoPvm': str, 'AanestysMitatoity': int, 'KohtaKasittelyVaihe': str, 'AanestysValtiopaivaasia': str, 'AanestysAlkuaika': str })
 
 # Filter rows
 filteredVoteInfos = dataVoteInfos[(
@@ -21,7 +21,7 @@ filteredVotesDist = dataVotesDist[(dataVotesDist.Tyyppi == 'eduskuntaryhma') | (
 
 # Drop useless columns
 filteredVoteInfos = filteredVoteInfos.drop(dataVoteInfos.columns.difference(
-    ['AanestysId', 'IstuntoVPVuosi', 'IstuntoPvm', 'AanestysMitatoity', 'KohtaKasittelyVaihe', 'AanestysValtiopaivaasia']), axis=1)
+    ['AanestysId', 'IstuntoVPVuosi', 'IstuntoNumero', 'IstuntoPvm', 'AanestysMitatoity', 'KohtaKasittelyVaihe', 'AanestysValtiopaivaasia', 'AanestysAlkuaika']), axis=1)
 filteredVotesDist = filteredVotesDist.drop(columns=['JakaumaId', 'Imported'])
 
 # Filter rows from the first voting of the year 2015

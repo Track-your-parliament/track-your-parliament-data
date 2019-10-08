@@ -21,6 +21,8 @@ def vote_from_vote_group(vote_group):
   return({
     'vote_id': vote_group.AanestysId.values[0],
     'date': vote_group.IstuntoPvm.values[0],
+    'gathering_number': vote_group.IstuntoNumero.values[0],
+    'time': vote_group.AanestysAlkuaika.values[0],
     'year': int(vote_group.IstuntoVPVuosi.values[0]),
     'annulled': vote_group.AanestysMitatoity.values[0] == 1,
     'hearing_stage': HEARINGS[vote_group.KohtaKasittelyVaihe.values[0]],
