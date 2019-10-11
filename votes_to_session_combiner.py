@@ -44,6 +44,7 @@ def get_session_for_vote_group(vote_group):
     return {
         'session': vote_group.session.values[0],
         'decision': vote_group.decision.values[0],
+        'date': str(vote_group.date.values[0]),
         'id': vote_group.id.values[0],
         'summary': vote_group.summary.values[0],
         'year': int(vote_group.year.values[0]),
