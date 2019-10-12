@@ -10,6 +10,53 @@ Data has been fetched and parsed from https://avoindata.eduskunta.fi and it's us
 
 ### Data models
 
+#### `votes_with_sessions.json`
+```
+{
+  session: {|Session ID|},
+  decision: {|What was decided during the session|},
+  date: {|Date of the session|},
+  votes: [
+    {
+      vote_id: {|Id of the vote|},
+      time: {|Time when vote took place|},
+      year: {|Year of the vote|},
+      annulled: {|1 if the vote has been annulled, 0 otherwise|},
+      hearing_stage: {|Which stage the vote took place in (first/second hearing etc)|},
+      distribution: [
+        {
+          group: {|Name of the group|}
+          type: {|Type of the group (parliamentary group or opposition/government parties|}
+          vote_counts: {
+            for: {|Number of people in the group who voted for|},
+            against: {|Number of people in the group who voted against|},
+            empty: {|Number of people in the group who voted empty|},
+            away: {|Number of people in the group who were absent|}
+          }
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  id: {|Id of the proposal|},
+  title: {|Title of the proposal|},
+  created: {|Creation date of the proposal|},
+  summary: {|Summary of the proposal|},
+  keywords: [
+    {
+      word: {|Word in the proposal|},
+      tfidf: {|TF-IDF score of the word|}
+    },
+    ...
+  ],
+  keywords_list: [
+    {|Word in the proposal|},
+    ...
+  ]
+}
+```
+
 #### `proposals_keywords_distributions.json`
 
 ```

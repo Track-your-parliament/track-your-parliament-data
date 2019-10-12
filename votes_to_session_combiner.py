@@ -11,11 +11,19 @@ def set_session_to_row(row, session_data):
     gathering_id = f'{row.year}/{row.gathering_number}'
 
     dataRows = pd.DataFrame(session_data['rowData'], columns=session_data['columnNames'])
-    dataRows = dataRows[dataRows.IstuntoTekninenAvain == gathering_id].sort_values(by=['Id'], ascending=False)
+    byGathering = dataRows[dataRows.IstuntoTekninenAvain == gathering_id].sort_values(by=['Id'], ascending=False)
+    bySecondHearing = dataRows[dataRows.KasittelyotsikkoFI == 'Toinen käsittely']
 
-    if dataRows.TekninenAvain.count() != 0:
-        row.session = dataRows.TekninenAvain.values[0]
-        row.decision = dataRows.PaatosFI.values[0]
+    if byGathering.TekninenAvain.count() != 0:
+        row.session = byGathering.TekninenAvain.values[0]
+        row.decision = byGathering.PaatosFI.values[0]
+
+    elif bySecondHearing.TekninenAvain.count() == 1:
+        row.session = bySecondHearing.TekninenAvain.values[0]
+        row.decision = bySecondHearing.PaatosFI.values[0]
+
+    else:
+        row.session = gathering_id
 
     return row
 
@@ -83,4 +91,4 @@ def group_votes_by_sessions(dataFrame):
 votes_by_session = group_votes_by_sessions(df)
 
 with open('./data/votes_with_sessions.json', 'w') as out:
-    json.dump(votes_by_session[1:], out)
+    json.dump(votes_by_session, out)
