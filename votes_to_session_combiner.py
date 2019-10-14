@@ -75,7 +75,7 @@ def get_votes_for_session(session_id):
 
     return votes
 
-def group_votes_by_sessions(dataFrame):
+def group_votes_by_sessions():
     session_votes = []
 
     for group in grouped_votes.groups:
@@ -86,9 +86,7 @@ def group_votes_by_sessions(dataFrame):
 
         session_votes.append(session)
 
-    return session_votes
+    return pd.DataFrame(session_votes).sort_values(by=['date'], ascending=False)
 
-votes_by_session = group_votes_by_sessions(df)
-
-with open('./data/votes_with_sessions.json', 'w') as out:
-    json.dump(votes_by_session, out)
+votes_by_session = group_votes_by_sessions()
+votes_by_session.to_json('./data/votes_with_sessions.json', orient='records')
