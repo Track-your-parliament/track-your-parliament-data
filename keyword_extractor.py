@@ -61,12 +61,3 @@ with open('./data/proposals_with_keywords.json', 'w') as out:
   out.write('[')
   pd.Series(np.arange(0, len(documents))).apply(lambda x: extract_keywords(x, out))
   out.write(']')
-
-# Draw wordcloud
-# w = wordcloud.WordCloud(
-#     background_color="white", contour_width=3, contour_color="steelblue", width=1000, height=1000
-# ).generate_from_frequencies(df_tfidf.sort_values(by=["tfidf"], ascending=False).head(40).to_dict()["tfidf"])
-# print(df["nimike"].iloc[DOCUMENT])
-# plt.figure(figsize=(10, 10))
-# plt.imshow(w, interpolation="bilinear")
-# plt.axis("off")

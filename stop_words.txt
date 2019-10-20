@@ -890,3 +890,14 @@ osata
 päätös
 määrä
 suoritus
+el
+los
+para
+no
+kappale
+määräys
+al
+si
+oy
+tmi
+ry
